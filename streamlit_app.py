@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 from pathlib import Path
 
 st.set_page_config(
@@ -11,30 +10,26 @@ st.set_page_config(
 
 # ─── Password gate ───
 def check_password():
-    """Returns True if the user entered the correct password."""
     def password_entered():
         if st.session_state["password"] == st.secrets["password"]:
             st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't keep it in memory
+            del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
-        # First run
-        st.markdown(
-            """
-            <style>
-                .stApp { background: #0A1628; }
-                .block-container { padding-top: 6rem !important; }
-                h1, h2, h3, label, p { color: #FFFFFF !important; font-family: 'Inter', sans-serif !important; }
-                .stTextInput input {
-                    background: #112040 !important;
-                    color: #FFFFFF !important;
-                    border: 1px solid rgba(0,212,255,0.3) !important;
-                }
-            </style>
-            """, unsafe_allow_html=True
-        )
+        st.markdown("""
+        <style>
+            .stApp { background: #0A1628; }
+            .block-container { padding-top: 6rem !important; max-width: 600px !important; }
+            h1, h2, h3, label, p, div { color: #FFFFFF !important; font-family: 'Inter', sans-serif !important; }
+            .stTextInput input {
+                background: #112040 !important;
+                color: #FFFFFF !important;
+                border: 1px solid rgba(0,212,255,0.3) !important;
+            }
+        </style>
+        """, unsafe_allow_html=True)
         st.markdown("### VAST DATA × ABSA — Executive Brief")
         st.markdown("This site is confidential. Please enter the access passcode to continue.")
         st.text_input("Passcode", type="password", on_change=password_entered, key="password")
@@ -50,24 +45,26 @@ def check_password():
 if not check_password():
     st.stop()
 
-# ─── Hide Streamlit chrome and render the microsite ───
-hide_streamlit_style = """
+# ─── Hide ALL Streamlit chrome ───
+st.markdown("""
 <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
+    #MainMenu, footer, header { visibility: hidden !important; display: none !important; }
     .stApp { background: #0A1628; }
     .block-container {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
         max-width: 100% !important;
     }
-    iframe { border: none !important; }
+    .main > div:first-child { padding: 0 !important; }
+    [data-testid="stAppViewContainer"] > .main { padding: 0 !important; }
+    [data-testid="stHeader"] { display: none !important; }
+    [data-testid="stToolbar"] { display: none !important; }
+    [data-testid="stDecoration"] { display: none !important; }
+    [data-testid="stSidebar"] { display: none !important; }
+    .stApp > div:first-child { margin-top: -80px; }
 </style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
+# ─── Render the microsite directly (no iframe) ───
 html_content = Path("absa_microsite.html").read_text(encoding="utf-8")
-components.html(html_content, height=8000, scrolling=True)
+st.markdown(html_content, unsafe_allow_html=True)
