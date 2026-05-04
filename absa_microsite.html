@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSA × VAST Data — The Economics of Sovereign Intelligence</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --navy:      #0A1628;
+    --navy-mid:  #0D1F3C;
+    --navy-card: #112040;
+    --navy-lift: #162850;
+    --cyan:      #00D4FF;
+    --cyan-dim:  rgba(0,212,255,0.12);
+    --cyan-glow: rgba(0,212,255,0.06);
+    --blue:      #1A6CFF;
+    --blue-dim:  rgba(26,108,255,0.15);
+    --green:     #00C896;
+    --green-dim: rgba(0,200,150,0.12);
+    --amber:     #FFB800;
+    --white:     #FFFFFF;
+    --off:       rgba(255,255,255,0.85);
+    --muted:     rgba(255,255,255,0.45);
+    --faint:     rgba(255,255,255,0.12);
+    --border:    rgba(0,212,255,0.12);
+    --border-s:  rgba(255,255,255,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 56px;
+    background: rgba(10,22,40,0.94);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 18px; }
+  .nav-wordmark {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800;
+    font-size: 1.15rem; letter-spacing: 0.06em;
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-sep { width: 1px; height: 22px; background: var(--border); }
+  .nav-client { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .nav-badge {
+    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); padding: 5px 12px;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 140px 56px 80px; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 75% 35%, rgba(0,212,255,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 45% at 15% 70%, rgba(26,108,255,0.08) 0%, transparent 55%),
+      linear-gradient(160deg, #0A1628 0%, #0D1F3C 60%, #0A1628 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%);
+  }
+  .hero-orb {
+    position: absolute; top: 12%; right: 6%;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; max-width: 880px; }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 28px; font-size: 0.68rem;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--cyan);
+  }
+  .hero-eyebrow-line { width: 36px; height: 1px; background: var(--cyan); }
+  h1 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800;
+    font-size: clamp(2.4rem, 5vw, 4.4rem);
+    line-height: 1.05; letter-spacing: -0.035em; margin-bottom: 28px; font-weight: 800;
+  }
+  h1 .cyan { color: var(--cyan); }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--muted);
+    max-width: 520px; line-height: 1.8; margin-bottom: 60px;
+  }
+  .hero-metrics {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+  }
+  .hm { background: rgba(13,31,60,0.9); padding: 30px 26px; transition: background 0.3s; }
+  .hm:hover { background: var(--navy-lift); }
+  .hm-val {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800;
+    font-size: 2.5rem; line-height: 1; margin-bottom: 6px;
+  }
+  .hm-val .accent { color: var(--cyan); }
+  .hm-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+  .hm-sub { font-size: 0.75rem; color: var(--faint); margin-top: 5px; }
+
+  section { padding: 96px 56px; }
+  .sec-eye {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.64rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--cyan); margin-bottom: 14px;
+  }
+  .sec-eye::before { content:''; display:block; width:28px; height:1px; background:var(--cyan); }
+  .sec-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800;
+    font-size: clamp(1.7rem, 3vw, 2.6rem); line-height: 1.12;
+    margin-bottom: 14px; letter-spacing: -0.01em;
+  }
+  .sec-desc { color: var(--muted); max-width: 540px; line-height: 1.8; margin-bottom: 56px; }
+
+  /* FINANCIAL */
+  .fin { background: var(--navy-mid); }
+  .fin-layout { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: start; }
+  .fin-table { width: 100%; border-collapse: collapse; }
+  .fin-table th {
+    text-align: left; font-size: 0.63rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 0 0 14px; border-bottom: 1px solid var(--border-s);
+  }
+  .fin-table th:not(:first-child) { text-align: right; }
+  .fin-table td { padding: 16px 0; border-bottom: 1px solid var(--border-s); font-size: 0.87rem; vertical-align: middle; }
+  .fin-table td:not(:first-child) { text-align: right; }
+  .old-price { color: var(--muted); text-decoration: line-through; font-size: 0.75rem; display: block; }
+  .new-price { color: var(--green); font-weight: 600; }
+  .saving-val { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 1rem; color: var(--cyan); }
+  .fin-total td { font-weight: 600; border-bottom: none; background: rgba(0,212,255,0.04); padding: 20px 0; }
+  .fin-total td:last-child { color: var(--cyan); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 1.05rem; }
+  .fin-cards { display: flex; flex-direction: column; gap: 20px; }
+  .fin-card {
+    padding: 28px 26px; border: 1px solid var(--border-s);
+    background: var(--navy-card); position: relative; overflow: hidden; transition: border-color 0.3s, background 0.3s;
+  }
+  .fin-card:hover { border-color: rgba(0,212,255,0.25); background: var(--navy-lift); }
+  .fin-card-bar { position: absolute; left:0; top:0; bottom:0; width:3px; }
+  .fin-card .val { font-family:'Inter', sans-serif; font-weight:800; font-size:1.9rem; line-height:1.1; margin-bottom:5px; }
+  .fin-card .lbl { font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); }
+  .fin-card .detail { font-size: 0.8rem; color: rgba(255,255,255,0.38); margin-top: 10px; line-height: 1.65; }
+
+  /* TTM */
+  .ttm { background: var(--navy); }
+  .prod-wage-box {
+    background: linear-gradient(135deg, rgba(0,200,150,0.07), rgba(26,108,255,0.05));
+    border: 1px solid rgba(0,200,150,0.22);
+    padding: 36px 40px; margin-bottom: 56px;
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 32px;
+  }
+  .pw-val { font-family:'Inter', sans-serif; font-weight:800; font-size:2rem; color:var(--green); line-height:1; margin-bottom:6px; }
+  .pw-lbl { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+  .pw-note { font-size: 0.76rem; color: rgba(255,255,255,0.35); margin-top: 6px; }
+  .mult-row {
+    display: grid; grid-template-columns: 1fr 64px 1fr;
+    border: 1px solid var(--border-s); margin-bottom: 16px;
+  }
+  .mult-before, .mult-after { padding: 30px 28px; }
+  .mult-before { border-right: 1px solid var(--border-s); }
+  .mult-after { border-left: 1px solid var(--border-s); background: rgba(0,200,150,0.04); }
+  .mult-arrow { display:flex; align-items:center; justify-content:center; color:var(--cyan); font-size:1.2rem; }
+  .mult-state { font-size: 0.62rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+  .mult-val { font-family:'Inter', sans-serif; font-weight:800; font-size:1.45rem; margin-bottom:5px; }
+  .mult-val.good { color: var(--green); }
+  .mult-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+  .mult-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1px solid rgba(0,200,150,0.3); background: rgba(0,200,150,0.06);
+    color: var(--green); padding: 9px 20px; font-size: 0.78rem;
+    letter-spacing: 0.05em; margin-bottom: 44px;
+  }
+
+  /* BIZ */
+  .biz { background: var(--navy-mid); }
+  .biz-cases { display: flex; flex-direction: column; gap: 2px; }
+  .biz-case { background: var(--navy-card); border: 1px solid var(--border-s); overflow: hidden; }
+  .biz-header {
+    display: grid; grid-template-columns: 56px 1fr auto;
+    gap: 22px; align-items: center;
+    padding: 26px 30px; cursor: pointer; transition: background 0.25s;
+  }
+  .biz-header:hover { background: var(--navy-lift); }
+  .biz-num { font-family:'Inter', sans-serif; font-weight:800; font-size:1.4rem; color:rgba(0,212,255,0.22); }
+  .biz-case-title { font-size: 0.97rem; font-weight: 600; margin-bottom: 3px; }
+  .biz-case-sub { font-size: 0.74rem; color: var(--muted); }
+  .biz-pill { font-family:'Inter', sans-serif; font-weight:800; font-size:1.1rem; color:var(--cyan); white-space:nowrap; }
+  .biz-body { max-height:0; overflow:hidden; transition: max-height 0.5s ease, padding 0.3s; padding: 0 30px 0 108px; }
+  .biz-body.open { max-height: 900px; padding: 0 30px 34px 108px; }
+  .biz-body-inner { border-top: 1px solid var(--border-s); padding-top: 26px; }
+  .biz-section-label { font-size:0.62rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--cyan); margin-bottom:8px; }
+  .biz-text { font-size: 0.86rem; color: var(--muted); line-height: 1.8; margin-bottom: 22px; }
+  .biz-outcomes { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 22px; }
+  .biz-out { padding: 18px 20px; background: rgba(0,212,255,0.04); border-left: 2px solid var(--cyan); }
+  .biz-out-val { font-family:'Inter', sans-serif; font-weight:800; font-size:1.25rem; color:var(--cyan); margin-bottom:4px; }
+  .biz-out-lbl { font-size: 0.7rem; color: var(--muted); }
+
+  /* CAPS */
+  .caps { background: var(--navy); }
+  .cap-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--border-s); }
+  .cap-card {
+    background: var(--navy-card); padding: 46px 42px;
+    position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .cap-card::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, var(--cyan), var(--blue), transparent);
+    opacity:0; transition: opacity 0.3s;
+  }
+  .cap-card:hover { background: var(--navy-lift); }
+  .cap-card:hover::after { opacity: 1; }
+  .cap-bg-num {
+    position: absolute; top: 18px; right: 28px;
+    font-family:'Inter', sans-serif; font-weight:800;
+    font-size: 5rem; color: rgba(0,212,255,0.04); line-height:1; user-select:none;
+  }
+  .cap-icon { font-size: 1.3rem; margin-bottom: 18px; }
+  .cap-title { font-family:'Inter', sans-serif; font-weight:800; font-size:1.2rem; margin-bottom:12px; }
+  .cap-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.8; }
+  .cap-tag {
+    display: inline-block; margin-top: 18px;
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--cyan); border: 1px solid rgba(0,212,255,0.25); padding: 5px 12px;
+  }
+
+  /* ROLLUP */
+  .rollup { background: var(--navy-mid); }
+  .rollup-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border-s); margin-bottom: 1px; }
+  .rc { background: var(--navy-card); padding: 36px 32px; transition: background 0.3s; }
+  .rc:hover { background: var(--navy-lift); }
+  .rc-cat { font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .rc-val { font-family:'Inter', sans-serif; font-weight:800; font-size:2.1rem; color:var(--cyan); line-height:1; margin-bottom:8px; }
+  .rc-desc { font-size: 0.79rem; color: var(--muted); line-height: 1.65; }
+  .rollup-total {
+    background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(26,108,255,0.06));
+    border: 1px solid rgba(0,212,255,0.18); padding: 56px; text-align: center;
+  }
+  .rt-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+  .rt-val {
+    font-family:'Inter', sans-serif; font-weight:800;
+    font-size: clamp(3rem, 6vw, 5.2rem); line-height: 1;
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .rt-sub { font-size: 0.82rem; color: var(--muted); margin-top: 14px; }
+
+  footer {
+    padding: 40px 56px; border-top: 1px solid var(--border-s);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand { font-family:'Inter', sans-serif; font-size:0.88rem; color:var(--muted); }
+  .footer-stamp { font-size: 0.63rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+  .footer-conf { font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--cyan); border:1px solid rgba(0,212,255,0.25); padding:5px 12px; }
+
+  .fade-up { opacity:0; transform:translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-wordmark">VAST DATA</div>
+    <div class="nav-sep"></div>
+    <div class="nav-client">ABSA Group · Executive Brief</div>
+  </div>
+  <div class="nav-badge">Strictly Confidential</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      Strategic Value Summary · May 2026 · CIO &amp; Board
+    </div>
+    <h1>The Economics of<br><span class="cyan">Sovereign Intelligence</span></h1>
+    <p class="hero-sub">VAST transforms ABSA's operational model — replacing fragmented, cloud-taxed tooling with a unified, sovereign AI platform that pays for itself in year one and compounds value across every engineering hour saved.</p>
+    <div class="hero-metrics">
+      <div class="hm">
+        <div class="hm-val"><span class="accent">$107</span>M</div>
+        <div class="hm-label">5-Year Aggregate Value</div>
+        <div class="hm-sub">Hard savings + risk avoidance</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val"><span class="accent">95</span>%</div>
+        <div class="hm-label">Infrastructure Cost Reduction</div>
+        <div class="hm-sub">vs. equivalent AWS model</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val"><span class="accent">60</span>×</div>
+        <div class="hm-label">Faster Incident Resolution</div>
+        <div class="hm-sub">120 min → 2 min MTTR</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val"><span class="accent">91</span>%</div>
+        <div class="hm-label">Engineering Effort Reclaimed</div>
+        <div class="hm-sub">Redirected to innovation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINANCIAL IMPACT -->
+<section class="fin">
+  <div class="sec-eye">Hard Dollar Comparison</div>
+  <h2 class="sec-title">Financial Impact Summary</h2>
+  <p class="sec-desc">Based on ABSA's enterprise workload: 69 TB daily ingest, 150 incidents/month, 42.1M AI tokens/day. All figures annualised vs. equivalent AWS deployment.</p>
+  <div class="fin-layout fade-up">
+    <div>
+      <table class="fin-table">
+        <thead>
+          <tr>
+            <th>Cost Category</th>
+            <th>AWS Cloud Annual</th>
+            <th>VAST Sovereign</th>
+            <th>Annual Saving</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ingestion / Storage</td>
+            <td><span class="old-price">$3,600,000</span><span class="new-price">$180,000</span></td>
+            <td><span class="new-price">$180K</span></td>
+            <td><span class="saving-val">$3.42M</span></td>
+          </tr>
+          <tr>
+            <td>Data Egress Fees</td>
+            <td><span class="old-price">$1,262,900</span><span class="new-price">$0</span></td>
+            <td><span class="new-price">Zero</span></td>
+            <td><span class="saving-val">$1.26M</span></td>
+          </tr>
+          <tr>
+            <td>AI Token Burn</td>
+            <td><span class="old-price">$1,708,000</span><span class="new-price">$136,000</span></td>
+            <td><span class="new-price">$136K (Fixed GPU)</span></td>
+            <td><span class="saving-val">$1.57M</span></td>
+          </tr>
+          <tr>
+            <td>Engineering Labour (FTE)</td>
+            <td><span class="old-price">$1,350,000</span><span class="new-price">$112,500</span></td>
+            <td><span class="new-price">$112K</span></td>
+            <td><span class="saving-val">$1.24M</span></td>
+          </tr>
+          <tr class="fin-total">
+            <td><strong>Total Annual OpEx</strong></td>
+            <td><strong>$7,920,900</strong></td>
+            <td><strong>$428,500</strong></td>
+            <td><strong>$7.49M+ / yr</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="fin-cards">
+      <div class="fin-card">
+        <div class="fin-card-bar" style="background:var(--cyan);"></div>
+        <div class="val" style="color:var(--cyan);">$6.25M</div>
+        <div class="lbl">Annual Technology Cost Saving</div>
+        <div class="detail">Pure infrastructure OpEx: ingestion tax elimination, zero egress fees, and fixed AI token costs vs. AWS. 95% cost reduction with full-fidelity data retention.</div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-card-bar" style="background:var(--green);"></div>
+        <div class="val" style="color:var(--green);">$1.24M</div>
+        <div class="lbl">Annual Engineering Productivity Saving</div>
+        <div class="detail">91.7% reduction in engineering hours per incident. 150 incidents/month × 5.5 hours recovered × $125/hr fully loaded. 12,000 engineering hours/yr reclaimed.</div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-card-bar" style="background:var(--amber);"></div>
+        <div class="val" style="color:var(--amber);">$9.82M</div>
+        <div class="lbl">Annual Revenue Protected</div>
+        <div class="detail">2 major incidents/yr × $4.91M protected per event. At $2.5M/hour downtime cost, VAST's 2-minute AI resolution eliminates the 2-hour manual diagnostic window entirely.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIME TO MARKET + PRODUCTIVITY -->
+<section class="ttm">
+  <div class="sec-eye">Velocity &amp; Productivity Impact</div>
+  <h2 class="sec-title">Time-to-Market Multiplier</h2>
+  <p class="sec-desc">Engineering capacity freed from operational toil translates directly into faster delivery, reduced cycle time, and measurable financial return on engineering investment.</p>
+
+  <div class="prod-wage-box fade-up">
+    <div>
+      <div class="pw-val">12,000</div>
+      <div class="pw-lbl">Engineering Hours Reclaimed Annually</div>
+      <div class="pw-note">60% of SRE bandwidth freed from reactive toil and re-invested in delivery</div>
+    </div>
+    <div>
+      <div class="pw-val">$1.5M</div>
+      <div class="pw-lbl">Value of Reclaimed Capacity Per Year</div>
+      <div class="pw-note">At $125/hr fully loaded cost — redirected from maintenance to AI-driven product delivery</div>
+    </div>
+    <div>
+      <div class="pw-val">8×</div>
+      <div class="pw-lbl">Faster Delivery Cycle</div>
+      <div class="pw-note">From feature request to production — vs. current toil-heavy operational model</div>
+    </div>
+    <div>
+      <div class="pw-val">$7.5M</div>
+      <div class="pw-lbl">5-Year Engineering Productivity Value</div>
+      <div class="pw-note">Hard FTE saving plus compounding innovation capacity gain across the engineering estate</div>
+    </div>
+  </div>
+
+  <div class="mult-badge fade-up">▲&nbsp; Every hour recovered from incident toil is an hour invested in digital banking innovation</div>
+
+  <div class="mult-row fade-up">
+    <div class="mult-before">
+      <div class="mult-state">Current State — Per Major Incident</div>
+      <div class="mult-val">6 engineers · 2 hrs each</div>
+      <div class="mult-desc">Manual correlation, war room escalation, cross-tool investigation. 60% of SRE bandwidth consumed by reactive incident work each month.</div>
+    </div>
+    <div class="mult-arrow">→</div>
+    <div class="mult-after">
+      <div class="mult-state">With VAST AIOps</div>
+      <div class="mult-val good">1 engineer · 30 min</div>
+      <div class="mult-desc">AI-driven root cause, automated correlation, autonomous remediation. Engineers validate and authorise — they don't diagnose from scratch.</div>
+    </div>
+  </div>
+
+  <div class="mult-row fade-up">
+    <div class="mult-before">
+      <div class="mult-state">After-Hours Response · Current</div>
+      <div class="mult-val">60 minutes</div>
+      <div class="mult-desc">On-call engineer woken, manual investigation initiated, escalation chain activated. High cognitive and labour overhead every night.</div>
+    </div>
+    <div class="mult-arrow">→</div>
+    <div class="mult-after">
+      <div class="mult-state">After-Hours Response · VAST</div>
+      <div class="mult-val good">&lt; 5 minutes</div>
+      <div class="mult-desc">Autonomous investigation and remediation. Notification only for decisions requiring human sign-off. 12× faster resolution. Engineers sleep.</div>
+    </div>
+  </div>
+
+  <div class="mult-row fade-up">
+    <div class="mult-before">
+      <div class="mult-state">Exfiltration Detection · Imperva Batch</div>
+      <div class="mult-val">3,840 minutes</div>
+      <div class="mult-desc">Friday 17:00 breach undetected until Monday 09:00. A full weekend of undetected exposure under 24-hour batch reporting.</div>
+    </div>
+    <div class="mult-arrow">→</div>
+    <div class="mult-after">
+      <div class="mult-state">VAST Real-Time Detection</div>
+      <div class="mult-val good">2 minutes</div>
+      <div class="mult-desc">99.9% reduction in breach exposure window. Autonomous containment triggers before any manual process could even begin.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESS IMPACT -->
+<section class="biz">
+  <div class="sec-eye">Structural Change</div>
+  <h2 class="sec-title">Business Impact by Use Case</h2>
+  <p class="sec-desc">Each use case eliminates a systemic cost category and creates compounding headroom for reinvestment in higher-value capability.</p>
+
+  <div class="biz-cases">
+    <div class="biz-case">
+      <div class="biz-header" onclick="toggle(this)">
+        <div class="biz-num">01</div>
+        <div>
+          <div class="biz-case-title">Eradicating Legacy Silo Costs &amp; Fragmented Tooling</div>
+          <div class="biz-case-sub">Platform Consolidation → Unified Security → Analytics Headroom</div>
+        </div>
+        <div class="biz-pill">$3.42M / yr</div>
+      </div>
+      <div class="biz-body open">
+        <div class="biz-body-inner">
+          <div class="biz-section-label">The Problem</div>
+          <div class="biz-text">ABSA currently operates multiple disconnected monitoring platforms — each with its own ingestion tax, licensing model, and access control silo. This fragmentation forces engineers to cross-reference dashboards manually, creates inconsistent security postures across domains, and imposes growing licensing costs at every data volume increase. There is no unified permissions model and no unified audit trail. Each tool compounds cost as data grows and becomes a liability as the threat landscape evolves — with zero visibility across domain boundaries.</div>
+          <div class="biz-section-label">The VAST Resolution</div>
+          <div class="biz-text">VAST consolidates all telemetry onto a single namespace with a unified RBAC and audit layer. One ingestion pipeline. One security perimeter. One query engine spanning all historical data. The cost of running parallel tooling is eliminated, and the governance overhead of managing multiple permission models collapses into a single control plane meeting SARB and internal audit requirements natively. This creates direct headroom to reinvest in higher-value analytics, AI capability, and digital product delivery — without requiring additional headcount or budget.</div>
+          <div class="biz-outcomes">
+            <div class="biz-out"><div class="biz-out-val">$3.42M</div><div class="biz-out-lbl">Annual storage &amp; ingestion saving vs. AWS</div></div>
+            <div class="biz-out"><div class="biz-out-val">15–50×</div><div class="biz-out-lbl">Storage compression — columnar vs. index-heavy</div></div>
+            <div class="biz-out"><div class="biz-out-val">Unified</div><div class="biz-out-lbl">RBAC &amp; audit across all data domains</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="biz-case">
+      <div class="biz-header" onclick="toggle(this)">
+        <div class="biz-num">02</div>
+        <div>
+          <div class="biz-case-title">Simplifying Data Integration — Eliminating Pipeline Maintenance Burden</div>
+          <div class="biz-case-sub">Zero ETL → Engineering Capacity → Innovation Velocity</div>
+        </div>
+        <div class="biz-pill">$1.24M / yr</div>
+      </div>
+      <div class="biz-body">
+        <div class="biz-body-inner">
+          <div class="biz-section-label">The Problem</div>
+          <div class="biz-text">Data engineering teams spend an estimated 40–60% of their time not building new capability, but monitoring, fixing, and maintaining brittle ETL pipelines. Data movement between systems introduces latency, creates transformation errors, and generates additional egress cost at every hop. Each pipeline is a maintenance liability that grows more fragile as data volumes increase. Engineers who should be accelerating ABSA's AI strategy are instead servicing infrastructure plumbing — at $125/hr fully loaded, this is a quantifiable and recoverable cost.</div>
+          <div class="biz-section-label">The VAST Resolution</div>
+          <div class="biz-text">VAST eliminates ETL entirely. Telemetry is written directly to the VAST database via PyArrow batching — no format conversion, no data movement, no intermediate pipeline to maintain. By keeping all processing within VAST, the maintenance burden collapses. Engineering teams shift from pipeline custodians to builders of AI-powered data products. We quantify this at $1.24M in annual FTE savings from AIOps automation alone — with additional gains from pipeline decommissioning on top. At scale, 12,000 engineering hours per year are redirected from maintenance to higher-value delivery, improving agility, data control, auditing, scale, and availability simultaneously.</div>
+          <div class="biz-outcomes">
+            <div class="biz-out"><div class="biz-out-val">$1.24M</div><div class="biz-out-lbl">Annual FTE saving from AIOps incident automation</div></div>
+            <div class="biz-out"><div class="biz-out-val">12,000 hrs</div><div class="biz-out-lbl">Engineering hours/yr redirected to innovation</div></div>
+            <div class="biz-out"><div class="biz-out-val">91%</div><div class="biz-out-lbl">Reduction in per-incident engineering effort</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="biz-case">
+      <div class="biz-header" onclick="toggle(this)">
+        <div class="biz-num">03</div>
+        <div>
+          <div class="biz-case-title">Autonomous Incident Resolution — The War Room Killer</div>
+          <div class="biz-case-sub">AI Root Cause Analysis → Revenue Protection → SRE Capacity Recovery</div>
+        </div>
+        <div class="biz-pill">$9.82M / yr</div>
+      </div>
+      <div class="biz-body">
+        <div class="biz-body-inner">
+          <div class="biz-section-label">The Problem</div>
+          <div class="biz-text">The primary operational bottleneck in modern banking is the 2-hour average diagnostic window for major incidents. At ABSA's scale, a 2-hour manual investigation at $2.5M/hour downtime cost creates $5M in revenue exposure per incident. Senior SREs and subject-matter experts are pulled into war rooms, disrupting planned work, exhausting on-call rotas, and creating unsustainable operational pressure. This cost is not theoretical — it is ongoing, measurable, and directly inhibits the talent retention needed to execute ABSA's digital roadmap.</div>
+          <div class="biz-section-label">The VAST Resolution</div>
+          <div class="biz-text">VAST's AI Brain (InsightEngine) compresses the diagnostic phase from 120 minutes to under 2 minutes by autonomously correlating signals across all telemetry domains. Root cause is surfaced with a human-readable reasoning chain — not a noisy alert. Engineers validate and authorise remediation rather than investigating from scratch. With 2 major incidents per year at $4.91M protected per event, the annual revenue protection case alone is $9.82M. An additional $1.2M in checkout fee leakage is prevented per degradation event by identifying slow spans in real time. War rooms become optional.</div>
+          <div class="biz-outcomes">
+            <div class="biz-out"><div class="biz-out-val">$9.82M</div><div class="biz-out-lbl">Annual revenue protected (2 major incidents)</div></div>
+            <div class="biz-out"><div class="biz-out-val">$1.2M</div><div class="biz-out-lbl">Fee leakage prevented per checkout degradation</div></div>
+            <div class="biz-out"><div class="biz-out-val">60%</div><div class="biz-out-lbl">SRE bandwidth reclaimed from reactive toil</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="biz-case">
+      <div class="biz-header" onclick="toggle(this)">
+        <div class="biz-num">04</div>
+        <div>
+          <div class="biz-case-title">Real-Time Security &amp; ATM Fraud Intelligence</div>
+          <div class="biz-case-sub">Sovereign Detection → Breach Cost Avoidance → Insurance Premium Reduction</div>
+        </div>
+        <div class="biz-pill">$13.75M / yr</div>
+      </div>
+      <div class="biz-body">
+        <div class="biz-body-inner">
+          <div class="biz-section-label">The Problem</div>
+          <div class="biz-text">Legacy exfiltration prevention relies on 24-hour batch reporting, creating a 3,840-minute window of undetected exposure every weekend. ATM fraud combining physical card skimming with digital transaction manipulation costs an estimated $2M annually in capital loss and investigative overhead. Cyber insurance premiums continue to rise as SARB and international regulators tighten MTTR requirements. These are not theoretical risks — they are ongoing, quantifiable losses with direct P&amp;L impact every quarter.</div>
+          <div class="biz-section-label">The VAST Resolution</div>
+          <div class="biz-text">VAST's real-time AI detection closes the weekend breach window to 2 minutes — a 99.9% reduction in exposure. The sovereign, air-gapped architecture with autonomous containment capability enables ABSA to negotiate a 15–20% reduction in annual cyber insurance premiums. For ATM fraud, VAST correlates ATM video embeddings with digital transaction traces via vector similarity search — identifying criminal behaviour in real-time before capital loss occurs. IBM's AI automation benchmark quantifies $1.47M–$2.22M per incident in breach cost avoidance through automated detection and escalation elimination.</div>
+          <div class="biz-outcomes">
+            <div class="biz-out"><div class="biz-out-val">$2.22M</div><div class="biz-out-lbl">Breach cost avoidance per incident (IBM benchmark)</div></div>
+            <div class="biz-out"><div class="biz-out-val">$2.0M</div><div class="biz-out-lbl">Annual ATM fraud capital loss reduction</div></div>
+            <div class="biz-out"><div class="biz-out-val">15–20%</div><div class="biz-out-lbl">Cyber insurance premium discount (sovereign arch)</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="caps">
+  <div class="sec-eye">What Changes on Day One</div>
+  <h2 class="sec-title">Four Capabilities ABSA<br>Didn't Have Before</h2>
+  <p class="sec-desc">Each pillar eliminates a category of cost, risk, or constraint that no incremental upgrade to existing tooling could address.</p>
+  <div class="cap-grid fade-up">
+    <div class="cap-card">
+      <div class="cap-bg-num">01</div>
+      <div class="cap-icon">⚡</div>
+      <div class="cap-title">Ticketless, Autonomous Operations</div>
+      <div class="cap-desc">A closed-loop AI pipeline moves from anomaly detection to applied fix without human coordination. War rooms become a relic. MTTR drops from 120 minutes to under 2 minutes — a 99.9% reduction in breach exposure window. SRE teams reclaim 12,000 engineering hours annually, redirected from toil to innovation.</div>
+      <div class="cap-tag">Eliminates War Room Overhead</div>
+    </div>
+    <div class="cap-card">
+      <div class="cap-bg-num">02</div>
+      <div class="cap-icon">🏛</div>
+      <div class="cap-title">Flat Storage Economics — Zero Ingestion Tax</div>
+      <div class="cap-desc">Traditional observability vendors charge $1–$4 per GB ingested — a financial penalty that grows with data volume. VAST replaces this with cents-per-GB storage pricing, eliminates egress fees entirely, and fixes AI token costs. Data growth is permanently decoupled from budget growth.</div>
+      <div class="cap-tag">95% OpEx Reduction vs. AWS</div>
+    </div>
+    <div class="cap-card">
+      <div class="cap-bg-num">03</div>
+      <div class="cap-icon">🔒</div>
+      <div class="cap-title">Absolute Data Sovereignty &amp; Audit Control</div>
+      <div class="cap-desc">A 100% air-gapped architecture ensures no banking telemetry or AI tokens ever leave ABSA's internal network. Every AI decision is recorded with a human-readable reasoning chain for SARB and internal audit. Real-time detection closes the 64-hour weekend monitoring gap to under 2 minutes.</div>
+      <div class="cap-tag">Regulatory-Grade Compliance</div>
+    </div>
+    <div class="cap-card">
+      <div class="cap-bg-num">04</div>
+      <div class="cap-icon">∞</div>
+      <div class="cap-title">The Intelligence Reservoir — No Re-platforming</div>
+      <div class="cap-desc">A unified storage layer allows ABSA to reprocess all historical telemetry as new AI models emerge — without rip-and-replace migration. Add C-nodes for compute, D-nodes for data. This eliminates the unbudgeted re-platforming cost (3–5× annual licence) that AI evolution would otherwise trigger every 2–3 years.</div>
+      <div class="cap-tag">Eliminates Re-platforming Risk</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5-YEAR ROLLUP -->
+<section class="rollup">
+  <div class="sec-eye">Board-Level Summary</div>
+  <h2 class="sec-title" style="margin-bottom:56px;">5-Year Aggregate Value</h2>
+  <div class="rollup-grid fade-up">
+    <div class="rc"><div class="rc-cat">Infrastructure OpEx</div><div class="rc-val">$31.25M</div><div class="rc-desc">$6.25M/yr: elimination of cloud ingestion tax, egress fees, and external AI token spend across 5 years.</div></div>
+    <div class="rc"><div class="rc-cat">Outage Revenue Protection</div><div class="rc-val">$49.10M</div><div class="rc-desc">2 major outages/yr × $4.91M protected per event. Based on $2.5M/hour downtime cost and 2-minute vs. 120-minute MTTR.</div></div>
+    <div class="rc"><div class="rc-cat">Security &amp; Breach Cost Avoidance</div><div class="rc-val">$11.00M</div><div class="rc-desc">1 weekend exfiltration/yr × $2.2M AI automation saving per incident across 5 years (IBM breach cost benchmark).</div></div>
+    <div class="rc"><div class="rc-cat">ATM &amp; Physical Fraud Reduction</div><div class="rc-val">$10.00M</div><div class="rc-desc">$2M/yr reduction in on-device capital loss via real-time video + transaction vector correlation.</div></div>
+    <div class="rc"><div class="rc-cat">SRE Labour &amp; Productivity Recovery</div><div class="rc-val">$5.00M</div><div class="rc-desc">$1M/yr in fully-loaded FTE value from 12,000 engineering hours/yr redirected from toil to strategic delivery.</div></div>
+    <div class="rc"><div class="rc-cat">Cyber Insurance Premium Saving</div><div class="rc-val">$0.75M</div><div class="rc-desc">$150K/yr reduction via sovereign architecture certification — 10% discount on $1.5M annual premium over 5 years.</div></div>
+  </div>
+  <div class="rollup-total fade-up">
+    <div class="rt-label">5-Year Aggregate Value Delivered to ABSA</div>
+    <div class="rt-val">$107.10 Million</div>
+    <div class="rt-sub">Hard infrastructure savings · Revenue protection · Risk avoidance · Engineering productivity · Insurance reduction</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">VAST Data × ABSA Group · The Economics of Sovereign Intelligence</div>
+  <div class="footer-stamp">Generated May 2026 · Based on documented ABSA workload profile</div>
+  <div class="footer-conf">Confidential</div>
+</footer>
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    document.querySelectorAll('.biz-body.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) body.classList.add('open');
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
